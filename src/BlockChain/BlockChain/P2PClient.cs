@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using WebSocketSharp;
 
 namespace BlockChain
@@ -38,7 +37,7 @@ namespace BlockChain
                             newTransactions.AddRange(_blockchain.PendingTransactions);
 
                             newChain.PendingTransactions = newTransactions;
-                            Program.PhillyCoin = newChain;
+                            _blockchain = newChain;
                         }
                     }
                 };

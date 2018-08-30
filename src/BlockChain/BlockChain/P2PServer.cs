@@ -13,13 +13,13 @@ namespace BlockChain
         private int _port;
         private Blockchain _blockchain;
 
-        public P2PServer(){ }
+        public P2PServer():this (null,0,null){ }
 
         public P2PServer(string ipAddress, int port, Blockchain blockchain)
         {
-            _ipAddress = ipAddress;
+            _ipAddress = ipAddress??String.Empty;
             _port = port;
-            _blockchain = blockchain;
+            _blockchain = blockchain??new Blockchain();
         }
 
         bool chainSynched = false;
@@ -28,7 +28,7 @@ namespace BlockChain
         public void Start()
         {
             wss = new WebSocketServer($"ws://{_ipAddress}:{_port}");
-            wss.AddWebSocketService<P2PServer>("/Blockchain");
+            wss.AddWebSocketService<P2PServer>("/Blockchain",_=> new P2PServer(_ipAddress,_port,_blockchain));
             wss.Start();
             Console.WriteLine($"Started server at ws://{_ipAddress}:{_port}");
         }
@@ -43,7 +43,14 @@ namespace BlockChain
             else
             {
                 Blockchain newChain = JsonConvert.DeserializeObject<Blockchain>(e.Data);
-
+                if (newChain != null)
+                {
+                    Console.WriteLine("Receive the newChain");
+                }
+                if (_blockchain != null)
+                {
+                    Console.WriteLine("Receive the _blockchain");
+                }
                 if (newChain.IsValid() && newChain.Chain.Count > _blockchain.Chain.Count)
                 {
                     List<Transaction> newTransactions = new List<Transaction>();
