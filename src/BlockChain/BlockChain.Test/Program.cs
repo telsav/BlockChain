@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using BlockChain.Actor;
+using BlockChain.Extensions;
+using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace BlockChain.Test
 {
@@ -9,13 +12,24 @@ namespace BlockChain.Test
         public static int Port = 0;
         public static P2PServer Server = null;
         public static P2PClient Client = null;
-        public static Blockchain PhillyCoin = new Blockchain();
+        private static Random random = new Random(DateTime.Now.Millisecond);
+        private static readonly IBlock genesis = new Block(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, null);
+        /** proof of work (https://en.wikipedia.org/wiki/Proof-of-work_system)  is set here: a hash needs 2 trailing zero bytes, increase the number of bytes to reduce the number of valid  hashes, and increse the proof of work time **/
+        private static readonly byte[] difficulty = new byte[] { 0x00, 0x00 };
+        public static BlockChain PhillyCoin = new BlockChain(difficulty,genesis);
         public static string name = "Unknown";
 
         static void Main(string[] args)
         {
-            PhillyCoin.InitializeChain();
 
+            new Tests().IsValid();
+
+            //TestBlockChain(args);
+        }
+
+
+        static void TestBlockChain(string[] args)
+        {
             if (args.Length >= 1)
                 Port = int.Parse(args[0]);
             if (args.Length >= 2)
@@ -23,9 +37,9 @@ namespace BlockChain.Test
 
             if (Port > 0)
             {
-                Server = new P2PServer(ipAddress,Port,PhillyCoin);
+                Server = new P2PServer(ipAddress, Port, PhillyCoin);
                 Server.Start();
-                Console.WriteLine($"P2P server is running on{ipAddress}:{Port}......");
+                Console.WriteLine($"P2P server is running on {ipAddress}:{Port}......");
             }
             if (name != "Unkown")
             {
@@ -61,7 +75,7 @@ namespace BlockChain.Test
                         Client.Broadcast(JsonConvert.SerializeObject(PhillyCoin));
                         break;
                     case 3:
-                        Console.WriteLine("Blockchain");
+                        Console.WriteLine("BlockChain");
                         Console.WriteLine(JsonConvert.SerializeObject(PhillyCoin, Formatting.Indented));
                         break;
 
@@ -74,6 +88,5 @@ namespace BlockChain.Test
 
             Client.Close();
         }
-
     }
 }

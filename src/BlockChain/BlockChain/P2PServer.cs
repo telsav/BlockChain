@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BlockChain.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,15 +12,15 @@ namespace BlockChain
     {
         private string _ipAddress;
         private int _port;
-        private Blockchain _blockchain;
+        private BlockChain _blockchain;
 
         public P2PServer():this (null,0,null){ }
 
-        public P2PServer(string ipAddress, int port, Blockchain blockchain)
+        public P2PServer(string ipAddress, int port, BlockChain blockchain)
         {
             _ipAddress = ipAddress??String.Empty;
             _port = port;
-            _blockchain = blockchain??new Blockchain();
+            _blockchain = blockchain??new BlockChain(null,null);
         }
 
         bool chainSynched = false;
@@ -42,7 +43,7 @@ namespace BlockChain
             }
             else
             {
-                Blockchain newChain = JsonConvert.DeserializeObject<Blockchain>(e.Data);
+                BlockChain newChain = JsonConvert.DeserializeObject<BlockChain>(e.Data);
                 if (newChain != null)
                 {
                     Console.WriteLine("Receive the newChain");
@@ -51,7 +52,7 @@ namespace BlockChain
                 {
                     Console.WriteLine("Receive the _blockchain");
                 }
-                if (newChain.IsValid() && newChain.Chain.Count > _blockchain.Chain.Count)
+                if (newChain.IsValid() && newChain.Count > _blockchain.Count)
                 {
                     List<Transaction> newTransactions = new List<Transaction>();
                     newTransactions.AddRange(newChain.PendingTransactions);

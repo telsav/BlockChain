@@ -5,8 +5,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AssetIssuance\" />
+    <Folder Include="AssetRe-issuance\" />
+    <Folder Include="AtomicExchanges\" />
+    <Folder Include="KeyManagement\" />
+    <Folder Include="MultiSignatures\" />
+    <Folder Include="NativeAssets\" />
+    <Folder Include="AddressFormats\" />
+    <Folder Include="KeyFormats\" />
+    <Folder Include="BlockSignatures\" />
+    <Folder Include="HandShaking\" />
+    <Folder Include="Parameters\" />
+    <Folder Include="Permissions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Threading.Tasks.Dataflow">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.1.0\ref\netcoreapp2.1\System.Threading.Tasks.Dataflow.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BlockChain.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using WebSocketSharp;
@@ -7,9 +8,9 @@ namespace BlockChain
 {
     public class P2PClient
     {
-        private Blockchain _blockchain;
+        private BlockChain _blockchain;
 
-        public P2PClient(Blockchain blockchain)
+        public P2PClient(BlockChain blockchain)
         {
             _blockchain = blockchain;
         }
@@ -29,8 +30,8 @@ namespace BlockChain
                     }
                     else
                     {
-                        Blockchain newChain = JsonConvert.DeserializeObject<Blockchain>(e.Data);
-                        if (newChain.IsValid() && newChain.Chain.Count > _blockchain.Chain.Count)
+                        BlockChain newChain = JsonConvert.DeserializeObject<BlockChain>(e.Data);
+                        if (newChain.IsValid() && newChain.Count > _blockchain.Count)
                         {
                             List<Transaction> newTransactions = new List<Transaction>();
                             newTransactions.AddRange(newChain.PendingTransactions);
